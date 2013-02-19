@@ -15,7 +15,7 @@ StateManager.State = (function(_super) {
     switch (true) {
       case !_.isString(attrs.pattern):
         return 'Must have a pattern';
-      case !attrs.transitions instanceof StateManager.Transitions:
+      case !(attrs.transitions instanceof StateManager.Transitions):
         return 'Transitions must be a valid collection';
       case !_.isRegExp(attrs.regExp):
         return 'Must have a valid regexp';

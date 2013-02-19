@@ -9,7 +9,7 @@ StateManager.Transition = (function(_super) {
     return Transition.__super__.constructor.apply(this, arguments);
   }
 
-  Transition.prototype.idAttribute = name;
+  Transition.prototype.idAttribute = 'name';
 
   Transition.prototype.validate = function(attrs) {
     switch (true) {

@@ -5,7 +5,7 @@ class StateManager.State extends Backbone.Model
     switch true
       when not _.isString attrs.pattern
         'Must have a pattern'
-      when not attrs.transitions instanceof StateManager.Transitions
+      when not (attrs.transitions instanceof StateManager.Transitions)
         'Transitions must be a valid collection'
       when not _.isRegExp attrs.regExp
         'Must have a valid regexp'

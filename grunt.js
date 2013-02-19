@@ -36,7 +36,7 @@ module.exports = function(grunt) {
     },
     uglify: {},
     jasmine: {
-      src: ['vendor/javascripts/jquery-1.9.1.js', 'vendor/javascripts/underscore-1.4.4.js', 'vendor/javascripts/backbone-0.9.10.js', 'src/javascripts/build/statemanager.js', 'src/javascripts/statemanager.helpers.js', 'src/javascripts/statemanager.transition.js', 'src/javascripts/statemanager.transitions.js', 'src/javascripts/statemanager.states.js', 'src/javascripts/statemanager.state.js', 'src/javascripts/statemanager.manager.js'],
+      src: ['vendor/javascripts/jquery-1.9.1.js', 'vendor/javascripts/underscore-1.4.4.js', 'vendor/javascripts/backbone-0.9.10.js', 'src/javascripts/build/statemanager.js', 'src/javascripts/statemanager.helpers.js', 'src/javascripts/statemanager.transition.js', 'src/javascripts/statemanager.transitions.js', 'src/javascripts/statemanager.state.js', 'src/javascripts/statemanager.states.js', 'src/javascripts/statemanager.manager.js'],
       helpers: 'spec/javascripts/helpers/*.js',
       specs: 'spec/javascripts/*.spec.js'
     },
