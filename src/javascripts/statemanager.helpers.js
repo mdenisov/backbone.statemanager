@@ -1,22 +1,19 @@
 
 StateManager.regExpStateConversion = function(name) {
-  name = name.replace(/[-[\]{}()+?.,\\^$|#\s]/g, '\\$&').replace(/:\w+/g, '([^\/]+)').replace(/\*\w+/g, '(.*?)');
-  return new RegExp("^" + name + "$");
+  return Backbone.Router.prototype._routeToRegExp(name);
 };
 
 StateManager.addStateManager = function(target, options) {
-  var stateManager, states;
+  var stateManager;
   if (options == null) {
     options = {};
   }
   if (!target) {
     new Error('Target must be defined');
   }
-  states = _.isFunction(target.states) ? target.states() : target.states;
-  states = StateManager.bindStates(target, states);
-  stateManager = new Backbone.StateManager.Manager(states, options);
+  StateManager.prepareTargetStates(target);
+  stateManager = new Backbone.StateManager.Manager(target.states, options);
   _.extend(target, {
-    states: states,
     stateManager: stateManager,
     triggerState: function() {
       return stateManager.triggerState.apply(stateManager, arguments);
@@ -30,17 +27,35 @@ StateManager.addStateManager = function(target, options) {
   }
 };
 
-StateManager.bindStates = function(target, states) {
-  states = _.clone(states);
-  _.each(states, function(state, pattern) {
-    _.each(['enter', 'exit'], function(key) {
-      if (state[key]) {
-        return state[key] = _.bind(state[key], target);
+StateManager.prepareTargetStates = function(target) {
+  var pattern, state, _ref, _state, _states;
+  _states = {};
+  if (_.isObject(target.states)) {
+    _ref = target.states;
+    for (pattern in _ref) {
+      state = _ref[pattern];
+      _state = StateManager.bindMethods(target, state, ['enter', 'exit']);
+      _state.transitions = StateManager.bindMethods(target, state.transitions);
+      _states[pattern] = _state;
+    }
+  }
+  return target.states = _states;
+};
+
+StateManager.bindMethods = function(target, methods, filters) {
+  var method, name, _methods;
+  _methods = {};
+  methods = _.isFunction(methods) ? methods() : _.clone(methods);
+  if (_.isObject(methods)) {
+    if (filters) {
+      methods = _.pick(methods, filters);
+    }
+    for (name in methods) {
+      method = methods[name];
+      if (_.isFunction(method)) {
+        _methods[name] = _.bind(method, target);
       }
-    });
-    return _.each(state.transitions(function(method, pattern) {
-      return state[pattern] = _.bind(method, target);
-    }));
-  });
-  return states;
+    }
+  }
+  return _methods;
 };

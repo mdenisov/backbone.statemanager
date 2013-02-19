@@ -9,7 +9,7 @@ class StateManager.Manager
   removeState : (pattern) -> @states.get(pattern)?.destroy()
 
   triggerState : (newStateName, options = {}) ->
-    if currentStateName = @getCurrentStateName() isnt name or options.reEnter
+    if (currentStateName = @getCurrentStateName()) isnt newStateName or options.reEnter
       @exitState currentStateName, _.extend {}, options, newStateName : newStateName
       @enterState newStateName, _.extend {}, options, prevStateName : currentStateName
 
@@ -18,12 +18,12 @@ class StateManager.Manager
     prevStateName = options.prevStateName
 
     @trigger "before:enter:state", state, stateName, options
-    if prevStateName then @executeStateTransitions "onBeforeEnterFrom", prevStateName, state, stateName, options
+    if prevStateName then @executeStateTransitions 'onBeforeEnterFrom', prevStateName, state, stateName, options
 
     state.get('enter')? options
     @setCurrentStateName stateName
 
-    if prevStateName then @executeStateTransitions "onEnterFrom", prevStateName, state, stateName, options
+    if prevStateName then @executeStateTransitions 'onEnterFrom', prevStateName, state, stateName, options
     @trigger "enter:state", state, stateName, options
 
   exitState : (stateName, options = {}) ->
@@ -31,28 +31,28 @@ class StateManager.Manager
     newStateName = options.newStateName
 
     @trigger "before:exit:state", state, stateName, options
-    if newStateName then @executeStateTransitions "onBeforeExitTo", newStateName, state, stateName, options
+    if newStateName then @executeStateTransitions 'onBeforeExitTo', newStateName, state, stateName, options
 
     state.get('exit')? options
     @setCurrentStateName null
 
-    if newStateName then @executeStateTransitions "onExitTo", newStateName, state, stateName, options
+    if newStateName then @executeStateTransitions 'onExitTo', newStateName, state, stateName, options
     @trigger "exit:state", state, stateName, options
 
   executeStateTransitions : (type, matchName, state, stateName, options) ->
     return unless matchName
     _.each state.matchTransitions?(type, matchName), (method) -> method state, stateName, options
 
-  getCurrenStateName : -> @currentStateName
+  getCurrentStateName : -> @currentStateName
 
   setCurrentStateName : (name) ->
     currentStateName = @currentStateName
     @currentStateName = name
-    if @name isnt currentStateName then @trigger 'change:currentStateName', currentStateName, name
+    if name isnt currentStateName then @trigger 'change:currentStateName', name, currentStateName
 
   close : ->
     @beforeClose?()
-    @exitState @getCurrenStateName()
+    @exitState @getCurrentStateName()
     @onClose?()
 
-_.extend StateManager.Manager, Backbone.Events
+_.extend StateManager.Manager::, Backbone.Events

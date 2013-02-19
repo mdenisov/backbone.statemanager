@@ -29,7 +29,7 @@ StateManager.Manager = (function() {
     if (options == null) {
       options = {};
     }
-    if (currentStateName = this.getCurrentStateName() !== name || options.reEnter) {
+    if ((currentStateName = this.getCurrentStateName()) !== newStateName || options.reEnter) {
       this.exitState(currentStateName, _.extend({}, options, {
         newStateName: newStateName
       }));
@@ -50,14 +50,14 @@ StateManager.Manager = (function() {
     prevStateName = options.prevStateName;
     this.trigger("before:enter:state", state, stateName, options);
     if (prevStateName) {
-      this.executeStateTransitions("onBeforeEnterFrom", prevStateName, state, stateName, options);
+      this.executeStateTransitions('onBeforeEnterFrom', prevStateName, state, stateName, options);
     }
     if (typeof (_base = state.get('enter')) === "function") {
       _base(options);
     }
     this.setCurrentStateName(stateName);
     if (prevStateName) {
-      this.executeStateTransitions("onEnterFrom", prevStateName, state, stateName, options);
+      this.executeStateTransitions('onEnterFrom', prevStateName, state, stateName, options);
     }
     return this.trigger("enter:state", state, stateName, options);
   };
@@ -73,14 +73,14 @@ StateManager.Manager = (function() {
     newStateName = options.newStateName;
     this.trigger("before:exit:state", state, stateName, options);
     if (newStateName) {
-      this.executeStateTransitions("onBeforeExitTo", newStateName, state, stateName, options);
+      this.executeStateTransitions('onBeforeExitTo', newStateName, state, stateName, options);
     }
     if (typeof (_base = state.get('exit')) === "function") {
       _base(options);
     }
     this.setCurrentStateName(null);
     if (newStateName) {
-      this.executeStateTransitions("onExitTo", newStateName, state, stateName, options);
+      this.executeStateTransitions('onExitTo', newStateName, state, stateName, options);
     }
     return this.trigger("exit:state", state, stateName, options);
   };
@@ -94,7 +94,7 @@ StateManager.Manager = (function() {
     });
   };
 
-  Manager.prototype.getCurrenStateName = function() {
+  Manager.prototype.getCurrentStateName = function() {
     return this.currentStateName;
   };
 
@@ -102,8 +102,8 @@ StateManager.Manager = (function() {
     var currentStateName;
     currentStateName = this.currentStateName;
     this.currentStateName = name;
-    if (this.name !== currentStateName) {
-      return this.trigger('change:currentStateName', currentStateName, name);
+    if (name !== currentStateName) {
+      return this.trigger('change:currentStateName', name, currentStateName);
     }
   };
 
@@ -111,7 +111,7 @@ StateManager.Manager = (function() {
     if (typeof this.beforeClose === "function") {
       this.beforeClose();
     }
-    this.exitState(this.getCurrenStateName());
+    this.exitState(this.getCurrentStateName());
     return typeof this.onClose === "function" ? this.onClose() : void 0;
   };
 
@@ -119,4 +119,4 @@ StateManager.Manager = (function() {
 
 })();
 
-_.extend(StateManager.Manager, Backbone.Events);
+_.extend(StateManager.Manager.prototype, Backbone.Events);
