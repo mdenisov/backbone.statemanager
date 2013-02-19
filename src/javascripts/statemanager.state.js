@@ -32,7 +32,10 @@ StateManager.State = (function(_super) {
 
   State.prototype.parse = function(attrs) {
     var _ref;
-    attrs.transitions = new StateManager.Transitions(attrs.transitions);
+    attrs.transitions = StateManager.Transitions.prototype.parse(attrs.transitions);
+    attrs.transitions = new StateManager.Transitions(attrs.transitions, {
+      parse: true
+    });
     if ((_ref = attrs.regExp) == null) {
       attrs.regExp = StateManager.regExpStateConversion(attrs.pattern);
     }

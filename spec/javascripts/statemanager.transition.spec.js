@@ -22,7 +22,7 @@ describe('StateManager.Transition', function() {
         return _.isString.andReturn(false);
       });
       When(function() {
-        return _this.result = _this.prototype.validate.call(_this.dummy, {});
+        return _this.result = _this.prototype.validate({});
       });
       return Then(function() {
         return expect(_this.result).toEqual('Must have a pattern');
@@ -33,7 +33,7 @@ describe('StateManager.Transition', function() {
         return _.isFunction.andReturn(false);
       });
       When(function() {
-        return _this.result = _this.prototype.validate.call(_this.dummy, {});
+        return _this.result = _this.prototype.validate({});
       });
       return Then(function() {
         return expect(_this.result).toEqual('Must have a method');
@@ -44,7 +44,7 @@ describe('StateManager.Transition', function() {
         return _.isRegExp.andReturn(false);
       });
       When(function() {
-        return _this.result = _this.prototype.validate.call(_this.dummy, {});
+        return _this.result = _this.prototype.validate({});
       });
       return Then(function() {
         return expect(_this.result).toEqual('Must have a valid regexp');
@@ -56,21 +56,18 @@ describe('StateManager.Transition', function() {
       return spyOn(StateManager, 'regExpStateConversion').andReturn('regExpStateConversion');
     });
     describe('when attributes already have a regexp', function() {
-      Given(function() {
-        return _this.args = {
-          regExp: 'regExp'
-        };
-      });
       When(function() {
-        return _this.result = _this.prototype.parse.call(_this.dummy, _this.args);
+        return _this.result = _this.prototype.parse({
+          regExp: 'regExp'
+        });
       });
       return Then(function() {
-        return expect(_this.result).toEqual(_this.args);
+        return expect(_this.result.regExp).toEqual('regExp');
       });
     });
     return describe('attributes passed are an object', function() {
       When(function() {
-        return _this.result = _this.prototype.parse.call(_this.dummy, {});
+        return _this.result = _this.prototype.parse({});
       });
       return Then(function() {
         return expect(_this.result).toEqual({

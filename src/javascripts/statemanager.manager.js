@@ -3,8 +3,12 @@ StateManager.Manager = (function() {
 
   function Manager(states, options) {
     var _ref;
-    this.options = options != null ? options : {};
-    this.states = new StateManager.States(states, this.options);
+    if (options == null) {
+      options = {};
+    }
+    this.states = new StateManager.States(states, _.extend(options, {
+      parse: true
+    }));
     if ((_ref = this.initialize) != null) {
       _ref.apply(this, arguments);
     }

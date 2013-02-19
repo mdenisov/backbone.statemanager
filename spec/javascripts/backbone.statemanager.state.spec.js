@@ -27,7 +27,7 @@ describe('StateManager.State', function() {
         return _.isString.andReturn(false);
       });
       When(function() {
-        return _this.result = _this.prototype.validate.call(_this.dummy, _this.args);
+        return _this.result = _this.prototype.validate(_this.args);
       });
       return Then(function() {
         return expect(_this.result).toEqual('Must have a pattern');
@@ -35,7 +35,7 @@ describe('StateManager.State', function() {
     });
     describe('when transitions attribute is not a collection of state manager transitions', function() {
       When(function() {
-        return _this.result = _this.prototype.validate.call(_this.dummy, {});
+        return _this.result = _this.prototype.validate({});
       });
       return Then(function() {
         return expect(_this.result).toEqual('Transitions must be a valid collection');
@@ -46,7 +46,7 @@ describe('StateManager.State', function() {
         return _.isRegExp.andReturn(false);
       });
       When(function() {
-        return _this.result = _this.prototype.validate.call(_this.dummy, _this.args);
+        return _this.result = _this.prototype.validate(_this.args);
       });
       return Then(function() {
         return expect(_this.result).toEqual('Must have a valid regexp');
@@ -57,7 +57,7 @@ describe('StateManager.State', function() {
         return _.isFunction.andReturn(false);
       });
       When(function() {
-        return _this.result = _this.prototype.validate.call(_this.dummy, _.extend(_this.args, {
+        return _this.result = _this.prototype.validate(_.extend(_this.args, {
           enter: 'enter'
         }));
       });
@@ -70,7 +70,7 @@ describe('StateManager.State', function() {
         return _.isFunction.andReturn(false);
       });
       When(function() {
-        return _this.result = _this.prototype.validate.call(_this.dummy, _.extend(_this.args, {
+        return _this.result = _this.prototype.validate(_.extend(_this.args, {
           exit: 'exit'
         }));
       });
@@ -83,28 +83,33 @@ describe('StateManager.State', function() {
     Given(function() {
       return spyOn(StateManager, 'regExpStateConversion').andReturn('regExpStateConversion');
     });
+    Given(function() {
+      return spyOn(StateManager.Transitions.prototype, 'parse').andReturn('transitions');
+    });
     describe('when attributes already have a regexp', function() {
-      Given(function() {
-        return _this.args = {
-          regExp: 'regExp'
-        };
-      });
       When(function() {
-        return _this.result = _this.prototype.parse.call(_this.dummy, _this.args);
+        return _this.result = _this.prototype.parse({
+          regExp: 'regExp'
+        });
       });
       return Then(function() {
-        return expect(_this.result).toEqual(_this.args);
+        return expect(_this.result.regExp).toEqual('regExp');
       });
     });
     return describe('attributes passed are an object', function() {
       When(function() {
-        return _this.result = _this.prototype.parse.call(_this.dummy, {});
+        return _this.result = _this.prototype.parse({
+          transitions: 'transitions'
+        });
       });
       Then(function() {
         return expect(_this.result.regExp).toEqual('regExpStateConversion');
       });
-      return Then(function() {
+      Then(function() {
         return expect(_this.result.transitions instanceof StateManager.Transitions).toBe(true);
+      });
+      return Then(function() {
+        return expect(StateManager.Transitions.prototype.parse).toHaveBeenCalledWith('transitions');
       });
     });
   });
