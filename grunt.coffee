@@ -1,8 +1,8 @@
 module.exports = (grunt) ->
 
   grunt.loadNpmTasks 'grunt-rigger'
+  grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-jasmine-runner'
-  grunt.loadNpmTasks 'grunt-coffee'
 
   grunt.initConfig
     pkg : '<json:package.json>'
@@ -15,67 +15,47 @@ module.exports = (grunt) ->
         '// Distributed under MIT license\n' +
         '// http://github.com/crashlytics/backbone.statemanager\n'
 
-    coffee :
-      app :
-        src : ['src/coffeescripts/*.coffee']
-        dest : 'src/javascripts'
-        options :
-          bare: true
-
-    lint :
-      files : ['src/statemanager.*.js']
-
-    rig :
-      build :
-        src : ['<banner:meta.banner>', 'src/javascripts/build/statemanager.js']
-        dest : 'lib/backbone.statemanager.js'
-
-    min :
+    minifyjs :
       standard :
         src : [
           '<banner:meta.banner>'
           '<config:rig.build.dest>'
         ]
-        dest: 'lib/backbone.statemanager.min.js'
+        dest : 'lib/backbone.marionette.min.js'
+
+    coffee :
+      compile :
+        files :
+          'src/javascripts/*.js' : 'src/coffeescripts/*.coffee'
+          'src/javascripts/build/*.js' : 'src/coffeescripts/build/*.coffee'
+          'spec/javascripts/*.spec.js' : 'spec/coffeescripts/*.spec.coffee'
+        options :
+          bare : true
+
+    rig :
+      compile :
+        src : 'src/javascripts/build/statemanager.js'
+        dest : 'lib/backbone.statemanager.js'
+
 
     jasmine :
       src : [
-        'vendor/javascripts/jquery.js'
-        'vendor/javascripts/json2.js'
-        'vendor/javascripts/underscore.js'
-        'vendor/javascripts/backbone.js'
-        'src/build/statemanager.js'
-        'src/statemanager.helpers.js'
-        'src/statemanager.states.js'
-        'src/statemanager.state.js'
+        'vendor/javascripts/jquery-1.9.1.js'
+        'vendor/javascripts/underscore-1.4.4.js'
+        'vendor/javascripts/backbone-0.9.10.js'
+        'src/javascripts/build/statemanager.js'
+        'src/javascripts/statemanager.helpers.js'
+        'src/javascripts/statemanager.transition.js'
+        'src/javascripts/statemanager.transitions.js'
+        'src/javascripts/statemanager.states.js'
+        'src/javascripts/statemanager.state.js'
+        'src/javascripts/statemanager.manager.js'
       ]
       helpers : 'spec/javascripts/helpers/*.js'
-      specs : 'spec/javascripts/**/*.spec.js'
+      specs : 'spec/javascripts/*.spec.js'
 
     'jasmine-server' :
       browser : false
 
-    jshint :
-      options :
-        curly : true
-        eqeqeq : true
-        immed : false
-        latedef : true
-        newcap : true
-        noarg : true
-        sub : true
-        undef : true
-        boss : true
-        eqnull : true
-        browser : true
 
-      globals :
-        jQuery : true
-        Backbone : true
-        _ : true
-        StateManager : true
-        $ : true
-
-    uglify: {}
-
-  grunt.registerTask 'default', 'lint rig min'
+  grunt.registerTask 'default', 'coffee rig'
