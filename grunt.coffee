@@ -1,8 +1,8 @@
 module.exports = (grunt) ->
 
-  grunt.loadNpmTasks 'grunt-rigger'
   grunt.loadNpmTasks 'grunt-jasmine-runner'
-  grunt.loadNpmTasks 'grunt-coffee'
+  grunt.loadNpmTasks 'grunt-contrib-coffee'
+  grunt.loadNpmTasks 'grunt-rigger'
 
   grunt.initConfig
     pkg : '<json:package.json>'
@@ -16,14 +16,10 @@ module.exports = (grunt) ->
         '// http://github.com/crashlytics/backbone.statemanager\n'
 
     coffee :
-      app :
-        src : ['src/coffeescripts/*.coffee']
-        dest : 'src/javascripts'
-        options :
-          bare: true
-
-    lint :
-      files : ['src/statemanager.*.js']
+      compile :
+        files :
+          'src/javascripts/*.js' : 'src/coffeescripts/*.coffee'
+          'src/javascripts/build/*.js' : 'src/coffeescripts/build/*.coffee'
 
     rig :
       build :
@@ -31,12 +27,11 @@ module.exports = (grunt) ->
         dest : 'lib/backbone.statemanager.js'
 
     min :
-      standard :
-        src : [
-          '<banner:meta.banner>'
-          '<config:rig.build.dest>'
-        ]
-        dest: 'lib/backbone.statemanager.min.js'
+      files :
+        src : ['<banner:meta.banner>', 'lib/backbone.statemanager.js']
+        dest : 'lib/backbone.statemanger.min.js'
+
+    uglify: {}
 
     jasmine :
       src : [
@@ -55,27 +50,4 @@ module.exports = (grunt) ->
     'jasmine-server' :
       browser : false
 
-    jshint :
-      options :
-        curly : true
-        eqeqeq : true
-        immed : false
-        latedef : true
-        newcap : true
-        noarg : true
-        sub : true
-        undef : true
-        boss : true
-        eqnull : true
-        browser : true
-
-      globals :
-        jQuery : true
-        Backbone : true
-        _ : true
-        StateManager : true
-        $ : true
-
-    uglify: {}
-
-  grunt.registerTask 'default', 'lint rig min'
+  grunt.registerTask 'default', 'coffee rig min'
