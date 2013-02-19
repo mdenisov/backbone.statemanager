@@ -10,12 +10,6 @@ module.exports = function(grunt) {
       version: '<%= pkg.version %>',
       banner: '// Backbone.Statemanager, v<%= meta.version %>\n' + '// Copyright (c)<%= grunt.template.today("yyyy") %> Patrick Camacho and Mark Roseboom, Crashlytics\n' + '// Distributed under MIT license\n' + '// http://github.com/crashlytics/backbone.statemanager\n'
     },
-    minifyjs: {
-      standard: {
-        src: ['<banner:meta.banner>', '<config:rig.build.dest>'],
-        dest: 'lib/backbone.marionette.min.js'
-      }
-    },
     coffee: {
       compile: {
         files: {
@@ -48,7 +42,12 @@ module.exports = function(grunt) {
     },
     'jasmine-server': {
       browser: false
+    },
+    watch: {
+      files: ['src/coffeescripts/*.coffee', 'src/coffeescripts/build/*.coffee', 'spec/coffeescripts/*.spec.coffee'],
+      tasks: ['spec']
     }
   });
+  grunt.registerTask('spec', 'coffee jasmine');
   return grunt.registerTask('default', 'coffee rig min');
 };

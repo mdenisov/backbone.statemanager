@@ -15,14 +15,6 @@ module.exports = (grunt) ->
         '// Distributed under MIT license\n' +
         '// http://github.com/crashlytics/backbone.statemanager\n'
 
-    minifyjs :
-      standard :
-        src : [
-          '<banner:meta.banner>'
-          '<config:rig.build.dest>'
-        ]
-        dest : 'lib/backbone.marionette.min.js'
-
     coffee :
       compile :
         files :
@@ -63,4 +55,13 @@ module.exports = (grunt) ->
     'jasmine-server' :
       browser : false
 
+    watch :
+      files : [
+        'src/coffeescripts/*.coffee'
+        'src/coffeescripts/build/*.coffee'
+        'spec/coffeescripts/*.spec.coffee'
+      ]
+      tasks : ['spec']
+
+  grunt.registerTask 'spec', 'coffee jasmine'
   grunt.registerTask 'default', 'coffee rig min'
