@@ -1,7 +1,7 @@
 class StateManager.Manager
 
-  constructor : (states, @options = {}) ->
-    @states = new StateManager.States states, @options
+  constructor : (states, options = {}) ->
+    @states = new StateManager.States states, _.extend options, parse : true
     @initialize?.apply @, arguments
 
   addState : (pattern, definition = {}) -> @states.add _.extend definition, pattern : pattern

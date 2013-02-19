@@ -1,5 +1,5 @@
 class StateManager.Transition extends Backbone.Model
-  idAttribute : name
+  idAttribute : 'name'
 
   validate : (attrs) ->
     switch true

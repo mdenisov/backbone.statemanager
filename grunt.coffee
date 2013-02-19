@@ -45,8 +45,8 @@ module.exports = (grunt) ->
         'src/javascripts/statemanager.helpers.js'
         'src/javascripts/statemanager.transition.js'
         'src/javascripts/statemanager.transitions.js'
-        'src/javascripts/statemanager.states.js'
         'src/javascripts/statemanager.state.js'
+        'src/javascripts/statemanager.states.js'
         'src/javascripts/statemanager.manager.js'
       ]
       helpers : 'spec/javascripts/helpers/*.js'

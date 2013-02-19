@@ -15,7 +15,7 @@ StateManager.State = (function(_super) {
     switch (true) {
       case !_.isString(attrs.pattern):
         return 'Must have a pattern';
-      case !attrs.transitions instanceof StateManager.Transitions:
+      case !(attrs.transitions instanceof StateManager.Transitions):
         return 'Transitions must be a valid collection';
       case !_.isRegExp(attrs.regExp):
         return 'Must have a valid regexp';
@@ -31,8 +31,11 @@ StateManager.State = (function(_super) {
   };
 
   State.prototype.parse = function(attrs) {
-    var _ref;
-    attrs.transitions = new StateManager.Transitions(attrs.transitions);
+    var transitions, _ref;
+    transitions = new StateManager.Transitions();
+    attrs.transitions = transitions.reset(transitions.parse(attrs.transitions), {
+      parse: true
+    });
     if ((_ref = attrs.regExp) == null) {
       attrs.regExp = StateManager.regExpStateConversion(attrs.pattern);
     }
