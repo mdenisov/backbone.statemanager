@@ -84,7 +84,7 @@ describe('StateManager.State', function() {
       return spyOn(StateManager, 'regExpStateConversion').andReturn('regExpStateConversion');
     });
     Given(function() {
-      return spyOn(StateManager.Transitions.prototype, 'parse').andReturn('transitions');
+      return _this.transitions = spyOnConstructor(StateManager, 'Transitions', ['parse', 'reset']);
     });
     describe('when attributes already have a regexp', function() {
       When(function() {
@@ -97,19 +97,24 @@ describe('StateManager.State', function() {
       });
     });
     return describe('attributes passed are an object', function() {
+      Given(function() {
+        return _this.transitions.parse.andReturn('transitions parsed');
+      });
       When(function() {
         return _this.result = _this.prototype.parse({
           transitions: 'transitions'
         });
       });
       Then(function() {
-        return expect(_this.result.regExp).toEqual('regExpStateConversion');
+        return expect(_this.transitions.parse).toHaveBeenCalledWith('transitions');
       });
       Then(function() {
-        return expect(_this.result.transitions instanceof StateManager.Transitions).toBe(true);
+        return expect(_this.transitions.reset).toHaveBeenCalledWith('transitions parsed', {
+          parse: true
+        });
       });
       return Then(function() {
-        return expect(StateManager.Transitions.prototype.parse).toHaveBeenCalledWith('transitions');
+        return expect(_this.result.regExp).toEqual('regExpStateConversion');
       });
     });
   });

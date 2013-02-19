@@ -34,14 +34,15 @@ describe 'StateManager.State', ->
 
   describe 'parse', =>
     Given => spyOn(StateManager, 'regExpStateConversion').andReturn 'regExpStateConversion'
-    Given => spyOn(StateManager.Transitions::, 'parse').andReturn 'transitions'
+    Given => @transitions = spyOnConstructor StateManager, 'Transitions', ['parse', 'reset']
 
     describe 'when attributes already have a regexp', =>
       When => @result = @prototype.parse regExp : 'regExp'
       Then => expect(@result.regExp).toEqual 'regExp'
 
     describe 'attributes passed are an object', =>
+      Given => @transitions.parse.andReturn 'transitions parsed'
       When => @result = @prototype.parse transitions : 'transitions'
+      Then => expect(@transitions.parse).toHaveBeenCalledWith 'transitions'
+      Then => expect(@transitions.reset).toHaveBeenCalledWith 'transitions parsed', parse : true
       Then => expect(@result.regExp).toEqual 'regExpStateConversion'
-      Then => expect(@result.transitions instanceof StateManager.Transitions).toBe true
-      Then => expect(StateManager.Transitions::parse).toHaveBeenCalledWith 'transitions'
