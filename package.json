@@ -1,0 +1,8 @@
+{
+  "devDependencies": {
+    "grunt": "~0.3.17",
+    "grunt-contrib-coffee": "~0.3.2",
+    "grunt-rigger": "~0.3.0",
+    "grunt-jasmine-runner": "~0.6.0"
+  }
+}
