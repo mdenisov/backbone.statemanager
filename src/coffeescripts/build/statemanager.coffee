@@ -1,4 +1,4 @@
-((Backbone, _, $) ->
+StateManager = ((Backbone, _, $) ->
 
   StateManager = {}
   Backbone.StateManager = StateManager
